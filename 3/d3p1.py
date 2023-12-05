@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import re
-file_path = "trebuchet.txt"
+file_path = "input.txt"
 
 
 def read_file_to_matrix(file_path):
