@@ -55,27 +55,40 @@ for seed in seeds:
 print(min(result))
 
 
-seeds2=[]
-i = 0
-while i < len(seeds):
-    seeds2+=list(range(seeds[i],seeds[i]+seeds[i+1]))
-    i += 2
+seeds2 = [seeds[i:i + 2] for i in range(0, len(seeds), 2)]
+seeds2 = [[sublist[0], sublist[0] + sublist[1] - 1] for sublist in seeds2]
 
-seeds2 = list(set(seeds2))
 print(seeds2)
 result2 = defaultdict(int)
 
+def find_intersaction(range1, range2):
+    a, b = range1
+    c, d = range2
+    # Find the intersection
+    intersection_start = max(a, c)
+    intersection_end = min(b, d)
+
+    # Check if there is a valid intersection
+    if intersection_start <= intersection_end:
+        return range(intersection_start, intersection_end+1)
+    else:
+        return None
+    
 for seed in seeds2:
-    # print("seed: {}".format(seed))
-    soil = find_mappings(mappings['seed-to-soil'],seed)
-    # print("soil: {}".format(soil))
-    fertilizer = find_mappings(mappings['soil-to-fertilizer'],soil)
-    water = find_mappings(mappings['fertilizer-to-water'],fertilizer)
-    light = find_mappings(mappings['water-to-light'],water)
-    temperature = find_mappings(mappings['light-to-temperature'],light)
-    humidity = find_mappings(mappings['temperature-to-humidity'],temperature)
-    location = find_mappings(mappings['humidity-to-location'],humidity)
-    result2[seed] = location
+    for x in mappings['seed-to-soil']:
+        r = find_intersaction(seed, [x[1],x[1]+x[2]-1])
+        if r is not None:
+            r = list(range(r[0],r[1]))
+            print(r)
+            for v in r:
+                soil = find_mappings(mappings['seed-to-soil'],v)
+                fertilizer = find_mappings(mappings['soil-to-fertilizer'],soil)
+                water = find_mappings(mappings['fertilizer-to-water'],fertilizer)
+                light = find_mappings(mappings['water-to-light'],water)
+                temperature = find_mappings(mappings['light-to-temperature'],light)
+                humidity = find_mappings(mappings['temperature-to-humidity'],temperature)
+                location = find_mappings(mappings['humidity-to-location'],humidity)
+                result2[v] = location
 
 print(min(result2.values()))
 # print(min(result2, key=result2.get))
