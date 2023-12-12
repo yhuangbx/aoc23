@@ -43,6 +43,28 @@ def strength(hand):
     else:
         return(4, hand)
 
+def strength2(hand):
+    hand = hand.replace('T', chr(ord('9')+1))
+    hand = hand.replace('J', chr(ord('2')-1))
+    hand = hand.replace('Q', chr(ord('9')+3))
+    hand = hand.replace('K', chr(ord('9')+4))
+    hand = hand.replace('A', chr(ord('9')+5))
+    C = Counter(hand)
+    if list(C.values()) == [5]:
+        return(10,hand)
+    elif sorted(C.values()) == [1,4]:
+        return(9, hand)
+    elif sorted(C.values()) == [2,3]:
+        return(8, hand)
+    elif sorted(C.values()) == [1,1,3]:
+        return(7, hand)
+    elif sorted(C.values()) == [1,2,2]:
+        return(6, hand)
+    elif sorted(C.values()) == [1,1,1,2]:
+        return(5, hand)
+    else:
+        return(4, hand)
+
 
 hands = []
 score = 0
@@ -54,7 +76,7 @@ for line in lines:
 
 hands = sorted(hands, key=lambda hb:strength(hb[0]))
 
-print(hands)
+# print(hands)
 for i, (h,b) in enumerate(hands):
     score += (i+1) * int(b)
 print(score)
